@@ -1,0 +1,325 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "DotVVM Azure Functions demo API",
+    "version": "1.0.0",
+    "title": "DotVVM + Azure Functions",
+    "contact": {
+      "email": "info@dotvvm.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host": "dotvvmsamplesazurefunctions.azurewebsites.net",
+  "basePath": "/api",
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/publish": {
+      "post": {
+        "summary": "Publishes a result of the test run",
+        "description": "",
+        "operationId": "postPublish",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Test run result object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestRunInputData"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/TestRunInputResult"
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/projects": {
+      "get": {
+        "summary": "Gets a list of projects",
+        "description": "",
+        "operationId": "getProjects",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/testSuites/{projectName}": {
+      "get": {
+        "summary": "Gets a list of test suites",
+        "description": "",
+        "operationId": "getTestSuites",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "projectName",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TestSuiteListData"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/results/{projectName}/{testSuiteName}/{buildNumber}": {
+      "get": {
+        "summary": "Gets the results of a specified test suite",
+        "description": "",
+        "operationId": "getResults",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "projectName",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "testSuiteName",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "buildNumber",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/TestSuiteOutputData"
+            }
+          }
+        }
+      }
+    },
+    "/testOutput/{projectName}/{testSuiteName}/{buildNumber}/{testFullName}": {
+      "get": {
+        "summary": "Gets the results of a specified test suite",
+        "description": "",
+        "operationId": "getTestOutput",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "projectName",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "testSuiteName",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "buildNumber",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "testFullName",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "TestRunInputData": {
+      "type": "object",
+      "properties": {
+        "projectName": {
+          "type": "string"
+        },
+        "testSuiteName": {
+          "type": "string"
+        },
+        "buildNumber": {
+          "type": "string"
+        },
+        "testFullName": {
+          "type": "string"
+        },
+        "testResult": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "testOutput": {
+          "type": "string"
+        },
+        "attachments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TestRunAttachmentInputData"
+          }
+        }
+      }
+    },
+    "TestRunAttachmentInputData": {
+      "type": "object",
+      "properties": {
+        "fileName": {
+          "type": "string"
+        },
+        "contentBase64": {
+          "type": "string"
+        }
+      }
+    },
+    "TestRunInputResult": {
+      "type": "object",
+      "properties": {
+        "testSuiteUrl": {
+          "type": "string"
+        },
+        "testResultUrl": {
+          "type": "string"
+        }
+      }
+    },
+    "TestSuiteListData": {
+      "type": "object",
+      "properties": {
+        "testSuiteName": {
+          "type": "string"
+        },
+        "buildNumber": {
+          "type": "string"
+        },
+        "createdDate": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "TestSuiteOutputData": {
+      "type": "object",
+      "properties": {
+        "projectName": {
+          "type": "string"
+        },
+        "testSuiteName": {
+          "type": "string"
+        },
+        "buildNumber": {
+          "type": "string"
+        },
+        "testRuns": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TestRunOutputData"
+          }
+        }
+      }
+    },
+    "TestRunOutputData": {
+      "type": "object",
+      "properties": {
+        "createdDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "testFullName": {
+          "type": "string"
+        },
+        "testResult": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "testOutput": {
+          "type": "string"
+        },
+        "isFullTestOutput": {
+          "type": "boolean"
+        },
+        "attachments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TestRunAttachmentOutputData"
+          }
+        }
+      }
+    },
+    "TestRunAttachmentOutputData": {
+      "type": "object",
+      "properties": {
+        "fileName": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

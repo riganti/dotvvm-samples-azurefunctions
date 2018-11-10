@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "projectName": "DotvvmSamples.AzureFunctions.Web",
+  "rootNamespace": "DotvvmSamples.AzureFunctions.Web",
+  "uiTestProjectPath": null,
+  "uiTestProjectRootNamespace": null,
+  "apiClients": [
+    {
+      "swaggerFile": "wwwroot/swagger.json",
+      "csharpClient": "Api/ApiClient.cs",
+      "typescriptClient": "wwwroot/Scripts/ApiClient.ts",
+      "namespace": "DotvvmSamples.AzureFunctions.Web.Api",
+      "compileTypescript": true,
+      "generateWrapperClass": true,
+      "isSingleClient": true,
+      "fetchOptions": {
+        "credentials": "same-origin"
+      }
+    }
+  ]
+}

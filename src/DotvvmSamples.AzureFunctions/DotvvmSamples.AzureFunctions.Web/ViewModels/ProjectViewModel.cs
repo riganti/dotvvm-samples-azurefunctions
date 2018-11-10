@@ -1,0 +1,16 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using DotVVM.Framework.ViewModel;
+
+namespace DotvvmSamples.AzureFunctions.Web.ViewModels
+{
+    public class ProjectViewModel : MasterPageViewModel
+    {
+        [FromRoute(nameof(ProjectName))]
+        public string ProjectName { get; set; }
+
+    }
+}
+

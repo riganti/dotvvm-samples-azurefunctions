@@ -1,0 +1,54 @@
+﻿@viewModel DotvvmSamples.AzureFunctions.Web.ViewModels.ResultsViewModel, DotvvmSamples.AzureFunctions.Web
+@masterPage Views/MasterPage.dotmaster
+
+<dot:Content ContentPlaceHolderID="MainContent">
+
+    <h1>{{value: ProjectName}} Test Results</h1>
+
+    <div class="form">
+        <div class="form-group">
+            <label>Test Suite</label>
+            <div>
+                {{value: TestSuiteName}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Build Number</label>
+            <div>
+                {{value: BuildNumber}}
+            </div>
+        </div>
+    </div>
+        
+    <dot:Repeater DataSource="{value: _functions.GetResults(ProjectName, TestSuiteName, BuildNumber).TestRuns}">
+        <div html:id="{value: '#' + TestFullName}"
+             class="panel"
+             class-panel-success="{value: TestResult == 1}"
+             class-panel-danger="{value: TestResult == 0}">
+            <div class="panel-heading">
+                <a href="javascript:;" onclick="togglePanel(this);">{{value: TestFullName}}</a>
+            </div>
+            <div class="panel-body" style="display: none">
+                <pre>{{value: TestOutput}}</pre>
+                <p Visible="{value: IsFullTestOutput == true}">
+                    <dot:LinkButton Text="View Full Content" 
+                                    Click="{staticCommand: TestOutput = _functions.GetTestOutput(_root.ProjectName, _root.TestSuiteName, _root.BuildNumber, TestFullName); 
+                                                           IsFullTestOutput = true}" />
+                </p>
+            </div>
+            <dot:Repeater DataSource="{value: Attachments}" WrapperTagName="ul" class="list-group">
+                <li class="list-group-item">
+                    <a href="{value: Url}">{{value: FileName}}</a>
+                </li>
+            </dot:Repeater>
+        </div>
+    </dot:Repeater>
+
+    <dot:InlineScript Dependencies="bootstrap">
+        function togglePanel(sender) {
+            $(sender).parent().next().slideToggle();
+        }
+    </dot:InlineScript>
+
+</dot:Content>
+

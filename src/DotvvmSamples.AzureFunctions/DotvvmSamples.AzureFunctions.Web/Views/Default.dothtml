@@ -1,0 +1,15 @@
+﻿@viewModel DotvvmSamples.AzureFunctions.Web.ViewModels.DefaultViewModel, DotvvmSamples.AzureFunctions.Web
+@masterPage Views/MasterPage.dotmaster
+<dot:Content ContentPlaceHolderID="MainContent">
+
+	<h1>Projects</h1>
+
+    <dot:Repeater DataSource="{value: _functions.GetProjects()}" WrapperTagName="ul">
+        <li>
+            <dot:RouteLink RouteName="Project" 
+                           Param-ProjectName="{value: _this}" 
+                           Text="{value: _this}" />
+        </li>
+    </dot:Repeater>
+
+</dot:Content>

@@ -1,0 +1,27 @@
+﻿@viewModel DotvvmSamples.AzureFunctions.Web.ViewModels.ProjectViewModel, DotvvmSamples.AzureFunctions.Web
+@masterPage Views/MasterPage.dotmaster
+
+<dot:Content ContentPlaceHolderID="MainContent">
+
+    <h1>{{value: ProjectName}} Test Runs</h1>
+
+    <table class="table table-bordered">
+        <dot:Repeater DataSource="{value: _functions.GetTestSuites(ProjectName)}" WrapperTagName="tbody">
+            <tr>
+                <td>{{value: TestSuiteName}}</td>
+                <td>{{value: BuildNumber}}</td>
+                <td><dot:Literal Text="{value: CreatedDate}" FormatString="g" /></td>
+                <td>
+                    <dot:RouteLink RouteName="Results"
+                                   Param-ProjectName="{value: _root.ProjectName}"
+                                   Param-TestSuiteName="{value: TestSuiteName}"
+                                   Param-BuildNumber="{value: BuildNumber}"
+                                   Text="View Results"
+                                   class="btn btn-primary" />
+                </td>
+            </tr>
+        </dot:Repeater>
+    </table>
+
+</dot:Content>
+

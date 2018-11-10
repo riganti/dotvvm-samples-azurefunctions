@@ -1,0 +1,18 @@
+﻿@viewModel DotvvmSamples.AzureFunctions.Web.ViewModels.MasterPageViewModel, DotvvmSamples.AzureFunctions.Web
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>DotVVM Azure Functions sample</title>
+</head>
+<body>
+
+    <div class="container">
+        <dot:ContentPlaceHolder ID="MainContent" />
+    </div>
+
+    <dot:RequiredResource Name="bootstrap" />
+
+</body>
+</html>
