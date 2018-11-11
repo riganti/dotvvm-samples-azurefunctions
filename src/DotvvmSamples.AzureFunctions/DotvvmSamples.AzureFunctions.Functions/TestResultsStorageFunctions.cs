@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Http;
 using DotvvmSamples.AzureFunctions.Contracts.Input;
 using DotvvmSamples.AzureFunctions.Contracts.Output;
 using DotvvmSamples.AzureFunctions.Functions.Model;
@@ -11,6 +12,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
@@ -87,7 +89,7 @@ namespace DotvvmSamples.AzureFunctions.Functions
         private static string GetTestAttachmentBlobUrl(string testSuiteName, string buildNumber, string testFullName, string attachmentFileName)
         {
             var testRunFolder = GetTestRunFolderUrl(testSuiteName, buildNumber, testFullName);
-            return $"{testRunFolder}/{Helpers.RemoveUnsafeChars(attachmentFileName, isFileName: true)}";
+            return $"{testRunFolder}/{Helpers.RemoveUnsafeChars(attachmentFileName, allowUrlChars: true)}";
         }
 
         private static string AppBaseUrl => config["AppBaseUrl"].TrimEnd('/');
@@ -96,7 +98,7 @@ namespace DotvvmSamples.AzureFunctions.Functions
 
 
         [FunctionName("PublishResult")]
-        public static async Task<TestRunInputResult> PublishResult([HttpTrigger(AuthorizationLevel.Function, "post", Route = "publish")]TestRunInputData input, TraceWriter log)
+        public static async Task<IActionResult> PublishResult([HttpTrigger(AuthorizationLevel.Function, "post", Route = "publish")]TestRunInputData input, TraceWriter log)
         {
             try
             {
@@ -104,7 +106,7 @@ namespace DotvvmSamples.AzureFunctions.Functions
                 input.ProjectName = Helpers.RemoveUnsafeChars(input.ProjectName);
                 input.TestSuiteName = Helpers.RemoveUnsafeChars(input.TestSuiteName);
                 input.BuildNumber = Helpers.RemoveUnsafeChars(input.BuildNumber);
-                input.TestFullName = Helpers.RemoveUnsafeChars(input.TestFullName);
+                input.TestFullName = Helpers.RemoveUnsafeChars(input.TestFullName, allowUrlChars: true);
 
                 // save test run results
                 var entity = new TestRun()
@@ -170,16 +172,16 @@ namespace DotvvmSamples.AzureFunctions.Functions
                     Timestamp = DateTimeOffset.UtcNow
                 }));
 
-                return new TestRunInputResult()
+                return new OkObjectResult(new TestRunInputResult()
                 {
                     TestSuiteUrl = $"{AppBaseUrl}/results/{input.ProjectName}/{input.TestSuiteName}/{input.BuildNumber}",
                     TestResultUrl = $"{AppBaseUrl}/results/{input.ProjectName}/{input.TestSuiteName}/{input.BuildNumber}#{input.TestFullName}"
-                };
+                });
             }
             catch (Exception ex)
             {
                 log.Error(ex.ToString());
-                return null;
+                return new BadRequestErrorMessageResult(ex.Message);
             }
         }
 
